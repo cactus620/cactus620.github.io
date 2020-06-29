@@ -78,9 +78,15 @@
     </header>
     <div class="e-content entry" itemprop="articleBody">
       
-        <p>Finally I managed to install Hadoop and start it correctly. Although at first I plan to setup one master node and three slaves as the data nodes. At last there’s only one master node and one data node running on the same machine.<br><a id="more"></a></p>
+        <p>Finally I managed to install Hadoop and start it correctly. Although at first I plan to setup one master node and three slaves as the data nodes. At last there’s only one master node and one data node running on the same machine.</p>
+<a id="more"></a>
+
 <p>I’m using Ubuntu 14.04.1 and Hadoop 2.5.2. Actually all went smoothly at first, as there’re lots of tutorials and articles about this, for example this one <a href="http://www.bogotobogo.com/Hadoop/BigData_hadoop_Install_on_ubuntu_single_node_cluster.php" target="_blank" rel="noopener">here</a>. The main problem which really bothered me is that I’m using the 64-bit Ubuntu system, while the Hadoop installation only contain 32-bit libraries.</p>
-<p>There’s only a warning saying:<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">...WARN util.NativeCodeLoader: Unable to load native-hadoop library <span class="keyword">for</span> your platform... using <span class="built_in">builtin</span>-java classes <span class="built_in">where</span> applicable</span><br></pre></td></tr></table></figure><br>But actually, this caused the data nodes not really started for me. After running start-all.sh the status report shows there’s no data node running and the capacity is all 0.<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">$ jps</span><br><span class="line">20501 SecondaryNameNode</span><br><span class="line">20296 NameNode</span><br><span class="line">21032 Jps</span><br><span class="line">20651 ResourceManager</span><br><span class="line">$ bin/hdfs dfsadmin -report</span><br><span class="line">Configured Capacity: 0 (0 B)</span><br><span class="line">Present Capacity: 0 (0 B)</span><br><span class="line">DFS Remaining: 0 (0 B)</span><br><span class="line">DFS Used: 0 (0 B)</span><br><span class="line">DFS Used%: NaN%</span><br><span class="line">Under replicated blocks: 0</span><br><span class="line">Blocks with corrupt replicas: 0</span><br><span class="line">Missing blocks: 0</span><br><span class="line"></span><br><span class="line">-------------------------------------------------</span><br><span class="line">Datanodes available: 0 (0 total, 0 dead)</span><br></pre></td></tr></table></figure><br>The problem is solved after building the 64-bit library following the instructions <a href="http://beadooper.com/?p=144" target="_blank" rel="noopener">here</a>.</p>
+<p>There’s only a warning saying:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">...WARN util.NativeCodeLoader: Unable to load native-hadoop library <span class="keyword">for</span> your platform... using <span class="built_in">builtin</span>-java classes <span class="built_in">where</span> applicable</span><br></pre></td></tr></table></figure>
+<p>But actually, this caused the data nodes not really started for me. After running start-all.sh the status report shows there’s no data node running and the capacity is all 0.</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">$ jps</span><br><span class="line">20501 SecondaryNameNode</span><br><span class="line">20296 NameNode</span><br><span class="line">21032 Jps</span><br><span class="line">20651 ResourceManager</span><br><span class="line">$ bin/hdfs dfsadmin -report</span><br><span class="line">Configured Capacity: 0 (0 B)</span><br><span class="line">Present Capacity: 0 (0 B)</span><br><span class="line">DFS Remaining: 0 (0 B)</span><br><span class="line">DFS Used: 0 (0 B)</span><br><span class="line">DFS Used%: NaN%</span><br><span class="line">Under replicated blocks: 0</span><br><span class="line">Blocks with corrupt replicas: 0</span><br><span class="line">Missing blocks: 0</span><br><span class="line"></span><br><span class="line">-------------------------------------------------</span><br><span class="line">Datanodes available: 0 (0 total, 0 dead)</span><br></pre></td></tr></table></figure>
+<p>The problem is solved after building the 64-bit library following the instructions <a href="http://beadooper.com/?p=144" target="_blank" rel="noopener">here</a>.</p>
 <p>Next, I’d like to still setup the three slave machines as planned. And then get something to run on it.</p>
 
       
@@ -122,20 +128,6 @@
 <section id="comment">
   <h1 class="title">Comments</h1>
 
-  
-      <div id="fb-root"></div>
-<script>
-  (function(d, s, id) {
-    var js, fjs = d.getElementsByTagName(s)[0];
-    if (d.getElementById(id)) return;
-    js = d.createElement(s); js.id = id;
-    js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=123456789012345";
-    fjs.parentNode.insertBefore(js, fjs);
-  }(document, 'script', 'facebook-jssdk'));
-</script>
-
-<div class="fb-comments" data-href="http://cactus620.github.io/2014/12/04/Hadoop-Installation/index.html" data-num-posts="5" data-width="840" data-colorscheme="light"></div>
-      
   
 </section>
 

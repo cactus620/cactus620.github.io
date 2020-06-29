@@ -78,10 +78,18 @@
     </header>
     <div class="e-content entry" itemprop="articleBody">
       
-        <p>Successfully setup a PPTP VPN Server on Ubuntu, following the instructions <a href="http://jesin.tk/setup-pptp-vpn-server-debian-ubuntu/" target="_blank" rel="noopener">here</a>.<br><a id="more"></a><br>All went smoothly. Just one thing to be noticed that don’t install OpenVPN and PPTP VPN on the same host. I did that and neither of them work. Guess there might be some kind of confliction.</p>
+        <p>Successfully setup a PPTP VPN Server on Ubuntu, following the instructions <a href="http://jesin.tk/setup-pptp-vpn-server-debian-ubuntu/" target="_blank" rel="noopener">here</a>.</p>
+<a id="more"></a>
+<p>All went smoothly. Just one thing to be noticed that don’t install OpenVPN and PPTP VPN on the same host. I did that and neither of them work. Guess there might be some kind of confliction.</p>
 <p>And for my first impression, PPTP VPN appears easier to use than OpenVPN. Although OpenVPN provides a web page to setup the configuration in graphical UI, but that’s probably becuase there’s too much configurations to set. And PPTP just needs several lines of command to setup everything.</p>
 <p>The general process as below.</p>
-<h2 id="Installation"><a href="#Installation" class="headerlink" title="Installation"></a>Installation</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">apt-get install pptpd -y</span><br><span class="line">update-rc.d pptpd defaults</span><br></pre></td></tr></table></figure><br>##Configuration##<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/pptpd.conf</span><br><span class="line">localip 172.20.1.1</span><br><span class="line">remoteip 172.20.1.2-254</span><br><span class="line"></span><br><span class="line">vim /etc/ppp/pptpd-options</span><br><span class="line">ms-dns 8.8.8.8</span><br><span class="line">ms-dns 8.8.4.4</span><br><span class="line"></span><br><span class="line">vim /etc/ppp/chap-secrets</span><br><span class="line">username * password *</span><br></pre></td></tr></table></figure><br>##Start Service##<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">service pptpd restart</span><br></pre></td></tr></table></figure><br>##Forwording##<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/sysctl.conf</span><br><span class="line">net.ipv4.ip_forward=1</span><br><span class="line"></span><br><span class="line">sysctl -p</span><br><span class="line"></span><br><span class="line">iptables -I INPUT -p tcp --dport 1723 -m state --state NEW -j ACCEPT</span><br><span class="line">iptables -I INPUT -p gre -j ACCEPT</span><br><span class="line">iptables -t nat -I POSTROUTING -o eth0 -j MASQUERADE</span><br><span class="line">iptables -I FORWARD -p tcp --tcp-flags SYN,RST SYN -s 172.20.1.0/24 -j TCPMSS  --clamp-mss-to-pmtu</span><br><span class="line"></span><br><span class="line">iptables -L</span><br><span class="line">iptables-save &gt; /etc/iptables.rules</span><br></pre></td></tr></table></figure>
+<h2 id="Installation"><a href="#Installation" class="headerlink" title="Installation"></a>Installation</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">apt-get install pptpd -y</span><br><span class="line">update-rc.d pptpd defaults</span><br></pre></td></tr></table></figure>
+<p>##Configuration##</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/pptpd.conf</span><br><span class="line">localip 172.20.1.1</span><br><span class="line">remoteip 172.20.1.2-254</span><br><span class="line"></span><br><span class="line">vim /etc/ppp/pptpd-options</span><br><span class="line">ms-dns 8.8.8.8</span><br><span class="line">ms-dns 8.8.4.4</span><br><span class="line"></span><br><span class="line">vim /etc/ppp/chap-secrets</span><br><span class="line">username * password *</span><br></pre></td></tr></table></figure>
+<p>##Start Service##</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">service pptpd restart</span><br></pre></td></tr></table></figure>
+<p>##Forwording##</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/sysctl.conf</span><br><span class="line">net.ipv4.ip_forward=1</span><br><span class="line"></span><br><span class="line">sysctl -p</span><br><span class="line"></span><br><span class="line">iptables -I INPUT -p tcp --dport 1723 -m state --state NEW -j ACCEPT</span><br><span class="line">iptables -I INPUT -p gre -j ACCEPT</span><br><span class="line">iptables -t nat -I POSTROUTING -o eth0 -j MASQUERADE</span><br><span class="line">iptables -I FORWARD -p tcp --tcp-flags SYN,RST SYN -s 172.20.1.0/24 -j TCPMSS  --clamp-mss-to-pmtu</span><br><span class="line"></span><br><span class="line">iptables -L</span><br><span class="line">iptables-save &gt; /etc/iptables.rules</span><br></pre></td></tr></table></figure>
 
 
       
@@ -123,20 +131,6 @@
 <section id="comment">
   <h1 class="title">Comments</h1>
 
-  
-      <div id="fb-root"></div>
-<script>
-  (function(d, s, id) {
-    var js, fjs = d.getElementsByTagName(s)[0];
-    if (d.getElementById(id)) return;
-    js = d.createElement(s); js.id = id;
-    js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=123456789012345";
-    fjs.parentNode.insertBefore(js, fjs);
-  }(document, 'script', 'facebook-jssdk'));
-</script>
-
-<div class="fb-comments" data-href="http://cactus620.github.io/2014/12/09/Setup-PPTP-VPN-Server/index.html" data-num-posts="5" data-width="840" data-colorscheme="light"></div>
-      
   
 </section>
 

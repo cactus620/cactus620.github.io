@@ -78,7 +78,11 @@
     </header>
     <div class="e-content entry" itemprop="articleBody">
       
-        <p>Sometimes, we need to draw diagrams of serials of integer values, but with Y axis value from 0 to 100.<br>So if the actual value is too large or too small, we need to normalize it to between 0 and 100, so that to fit into the diagram better.<br>For example, if the actual value is 998, then we need to scale it by 0.1 and the value in diagram is 99.8.<br><a id="more"></a><br>Here is the C# code I used to get the scale (s) from a given value (M).<br><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">double</span> s = <span class="number">1.0</span>;</span><br><span class="line"><span class="keyword">if</span> (!M.Equals(<span class="number">0</span>))</span><br><span class="line">&#123;</span><br><span class="line">  s = Math.Pow(<span class="number">10</span>, Math.Floor(Math.Log10(<span class="number">100</span>/M)));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+        <p>Sometimes, we need to draw diagrams of serials of integer values, but with Y axis value from 0 to 100.<br>So if the actual value is too large or too small, we need to normalize it to between 0 and 100, so that to fit into the diagram better.<br>For example, if the actual value is 998, then we need to scale it by 0.1 and the value in diagram is 99.8.</p>
+<a id="more"></a>
+<p>Here is the C# code I used to get the scale (s) from a given value (M). </p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">double</span> s = <span class="number">1.0</span>;</span><br><span class="line"><span class="keyword">if</span> (!M.Equals(<span class="number">0</span>))</span><br><span class="line">&#123;</span><br><span class="line">  s = Math.Pow(<span class="number">10</span>, Math.Floor(Math.Log10(<span class="number">100</span>/M)));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <p>I also proved this by mathematics. That’s the most interesting part :)<br><img src="/img/post/ProveIntegerNormalization.png" alt=""></p>
 
       
@@ -120,20 +124,6 @@
 <section id="comment">
   <h1 class="title">Comments</h1>
 
-  
-      <div id="fb-root"></div>
-<script>
-  (function(d, s, id) {
-    var js, fjs = d.getElementsByTagName(s)[0];
-    if (d.getElementById(id)) return;
-    js = d.createElement(s); js.id = id;
-    js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=123456789012345";
-    fjs.parentNode.insertBefore(js, fjs);
-  }(document, 'script', 'facebook-jssdk'));
-</script>
-
-<div class="fb-comments" data-href="http://cactus620.github.io/2014/11/12/Integer%20Normalization/index.html" data-num-posts="5" data-width="840" data-colorscheme="light"></div>
-      
   
 </section>
 
