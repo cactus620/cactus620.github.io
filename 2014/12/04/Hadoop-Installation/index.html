@@ -1,0 +1,195 @@
+<!DOCTYPE HTML>
+<html lang="en-US">
+<head>
+  <meta charset="utf-8">
+  
+  <title>Hadoop on 64-bit Ubuntu | Cactus Castle</title>
+  <meta name="author" content="Mandy Liu">
+  
+  <meta name="description" content="Mandy&#39;s blog">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="Hadoop on 64-bit Ubuntu"/>
+  <meta property="og:site_name" content="Cactus Castle"/>
+
+  
+    <meta property="og:image" content=""/>
+  
+
+  <link href="/favicon.png" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="Cactus Castle" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  
+<script>
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+			m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+	ga('create', 'UA-56747212-1', 'auto');
+	ga('send', 'pageview');
+
+</script>
+
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body>
+  <header id="header" class="inner"><div class="alignleft">
+  <h1><a href="/">Cactus Castle</a></h1>
+  <h2><a href="/">First step to have a dream - go to sleep</a></h2>
+</div>
+<nav id="main-nav" class="alignright">
+  <ul>
+    
+      <li><a href="/">Home</a></li>
+    
+      <li><a href="/./Sketch-Book">Sketch Book</a></li>
+    
+      <li><a href="/./Piano-Room">Piano Room</a></li>
+    
+      <li><a href="/./About">About</a></li>
+    
+      <li><a href="/archives">Archives</a></li>
+    
+  </ul>
+  <div class="clearfix"></div>
+</nav>
+<div class="clearfix"></div>
+</header>
+  <div id="content" class="inner">
+    <div id="main-col" class="alignleft"><div id="wrapper"><article id="post-Hadoop-Installation" class="h-entry post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time class="dt-published" datetime="2014-12-04T09:19:16.000Z"><a href="/2014/12/04/Hadoop-Installation/">2014-12-04</a></time>
+      
+      
+  
+    <h1 class="p-name title" itemprop="headline name">Hadoop on 64-bit Ubuntu</h1>
+  
+
+    </header>
+    <div class="e-content entry" itemprop="articleBody">
+      
+        <p>Finally I managed to install Hadoop and start it correctly. Although at first I plan to setup one master node and three slaves as the data nodes. At last there’s only one master node and one data node running on the same machine.<br><a id="more"></a></p>
+<p>I’m using Ubuntu 14.04.1 and Hadoop 2.5.2. Actually all went smoothly at first, as there’re lots of tutorials and articles about this, for example this one <a href="http://www.bogotobogo.com/Hadoop/BigData_hadoop_Install_on_ubuntu_single_node_cluster.php" target="_blank" rel="noopener">here</a>. The main problem which really bothered me is that I’m using the 64-bit Ubuntu system, while the Hadoop installation only contain 32-bit libraries.</p>
+<p>There’s only a warning saying:<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">...WARN util.NativeCodeLoader: Unable to load native-hadoop library <span class="keyword">for</span> your platform... using <span class="built_in">builtin</span>-java classes <span class="built_in">where</span> applicable</span><br></pre></td></tr></table></figure><br>But actually, this caused the data nodes not really started for me. After running start-all.sh the status report shows there’s no data node running and the capacity is all 0.<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">$ jps</span><br><span class="line">20501 SecondaryNameNode</span><br><span class="line">20296 NameNode</span><br><span class="line">21032 Jps</span><br><span class="line">20651 ResourceManager</span><br><span class="line">$ bin/hdfs dfsadmin -report</span><br><span class="line">Configured Capacity: 0 (0 B)</span><br><span class="line">Present Capacity: 0 (0 B)</span><br><span class="line">DFS Remaining: 0 (0 B)</span><br><span class="line">DFS Used: 0 (0 B)</span><br><span class="line">DFS Used%: NaN%</span><br><span class="line">Under replicated blocks: 0</span><br><span class="line">Blocks with corrupt replicas: 0</span><br><span class="line">Missing blocks: 0</span><br><span class="line"></span><br><span class="line">-------------------------------------------------</span><br><span class="line">Datanodes available: 0 (0 total, 0 dead)</span><br></pre></td></tr></table></figure><br>The problem is solved after building the 64-bit library following the instructions <a href="http://beadooper.com/?p=144" target="_blank" rel="noopener">here</a>.</p>
+<p>Next, I’d like to still setup the three slave machines as planned. And then get something to run on it.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+  
+  <div class="categories">
+    <a href="/categories/Programming/">Programming</a>
+  </div>
+
+        
+        
+  <div class="addthis addthis_toolbox addthis_default_style">
+    
+      <a class="addthis_button_facebook_like" fb:like:layout="button_count"></a>
+    
+    
+      <a class="addthis_button_tweet"></a>
+    
+    
+      <a class="addthis_button_google_plusone" g:plusone:size="medium"></a>
+    
+    
+      <a class="addthis_button_pinterest_pinit" pi:pinit:layout="horizontal"></a>
+    
+    <a class="addthis_counter addthis_pill_style"></a>
+  </div>
+  <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js"></script>
+
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+<section id="comment">
+  <h1 class="title">Comments</h1>
+
+  
+      <div id="fb-root"></div>
+<script>
+  (function(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) return;
+    js = d.createElement(s); js.id = id;
+    js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=123456789012345";
+    fjs.parentNode.insertBefore(js, fjs);
+  }(document, 'script', 'facebook-jssdk'));
+</script>
+
+<div class="fb-comments" data-href="http://cactus620.github.io/2014/12/04/Hadoop-Installation/index.html" data-num-posts="5" data-width="840" data-colorscheme="light"></div>
+      
+  
+</section>
+
+</div></div>
+    <aside id="sidebar" class="alignright">
+  <div class="search">
+  <form action="//google.com/search" method="get" accept-charset="utf-8">
+    <input type="search" name="q" results="0" placeholder="Search">
+    <input type="hidden" name="as_sitesearch" value="cactus620.github.io">
+  </form>
+</div>
+
+
+  
+<div class="widget tag">
+  <h3 class="title">Categories</h3>
+  <ul class="entry">
+  
+    <li><a href="/categories/GUNPLA/">GUNPLA</a><small>8</small></li>
+  
+    <li><a href="/categories/Programming/">Programming</a><small>5</small></li>
+  
+    <li><a href="/categories/Sketch/">Sketch</a><small>30</small></li>
+  
+  </ul>
+</div>
+
+
+  
+</aside>
+    <div class="clearfix"></div>
+  </div>
+  <footer id="footer" class="inner"><div class="alignleft">
+  
+  &copy; 2020 Mandy Liu
+  
+</div>
+<div class="clearfix"></div></footer>
+  
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+</body>
+</html>

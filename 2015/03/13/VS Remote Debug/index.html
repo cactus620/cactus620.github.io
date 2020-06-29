@@ -1,0 +1,226 @@
+<!DOCTYPE HTML>
+<html lang="en-US">
+<head>
+  <meta charset="utf-8">
+  
+  <title>Visual Studio Remote Debug Tool | Cactus Castle</title>
+  <meta name="author" content="Mandy Liu">
+  
+  <meta name="description" content="Mandy&#39;s blog">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="Visual Studio Remote Debug Tool"/>
+  <meta property="og:site_name" content="Cactus Castle"/>
+
+  
+    <meta property="og:image" content=""/>
+  
+
+  <link href="/favicon.png" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="Cactus Castle" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  
+<script>
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+			m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+	ga('create', 'UA-56747212-1', 'auto');
+	ga('send', 'pageview');
+
+</script>
+
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body>
+  <header id="header" class="inner"><div class="alignleft">
+  <h1><a href="/">Cactus Castle</a></h1>
+  <h2><a href="/">First step to have a dream - go to sleep</a></h2>
+</div>
+<nav id="main-nav" class="alignright">
+  <ul>
+    
+      <li><a href="/">Home</a></li>
+    
+      <li><a href="/./Sketch-Book">Sketch Book</a></li>
+    
+      <li><a href="/./Piano-Room">Piano Room</a></li>
+    
+      <li><a href="/./About">About</a></li>
+    
+      <li><a href="/archives">Archives</a></li>
+    
+  </ul>
+  <div class="clearfix"></div>
+</nav>
+<div class="clearfix"></div>
+</header>
+  <div id="content" class="inner">
+    <div id="main-col" class="alignleft"><div id="wrapper"><article id="post-VS Remote Debug" class="h-entry post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time class="dt-published" datetime="2015-03-13T10:03:16.000Z"><a href="/2015/03/13/VS Remote Debug/">2015-03-13</a></time>
+      
+      
+  
+    <h1 class="p-name title" itemprop="headline name">Visual Studio Remote Debug Tool</h1>
+  
+
+    </header>
+    <div class="e-content entry" itemprop="articleBody">
+      
+        <h2 id="Why-Remote-Debug"><a href="#Why-Remote-Debug" class="headerlink" title="Why Remote Debug"></a>Why Remote Debug</h2><p>Sometimes, maybe your tester report an bug which you can’t reproduce in development environment; maybe it costs too much to setup the environment to reproduce the bug; maybe the issue is reported by an customer with very limited information…</p>
+<p>Anyway, you don’t have development environment on the machine where the issue is produced. It might not help all the time, but you always have an option of doing a remote debug.</p>
+<p>If you’re using Visual Studio, it provides a remote debug tool itself. You just need to have the pdb files and corresponding source codes in your development environment.</p>
+<h2 id="How-to-Remote-Debug"><a href="#How-to-Remote-Debug" class="headerlink" title="How to Remote Debug"></a>How to Remote Debug</h2><p><a id="more"></a><br><strong>Setup on the remote machine</strong><br>Something still needs to be setup on the remote machine where the issue can be reproduced.</p>
+<ol>
+<li><p>Run the Remote Debugger tool in the remote machine.<br>If Visual Studio is installed in the remote machine, the tool can be found in this folder:<br><em>C:\Program Files (x86)\Microsoft Visual Studio 11.0\Common7\IDE\Remote Debugger\x64 or x86</em><br>If Visual Studio is not installed, download the tool from here:<br><a href="http://msdn.microsoft.com/en-us/library/bt727f1t(v=vs.110).aspx" target="_blank" rel="noopener">http://msdn.microsoft.com/en-us/library/bt727f1t(v=vs.110).aspx</a></p>
+</li>
+<li><p>Run msvsmon.exe. The following dialog will be shown. Remember the server name and port number. It will be used to attach to the process later.<br><img src="/img/post/RemoteDebug-01.png" alt=""><br>If it’s the first time running, there’s another configuration shown first, just click “Configure remote debugging”.<br><img src="/img/post/RemoteDebug-02.png" alt=""></p>
+</li>
+<li><p>To simplify the process, let’s use no authentication while debugging. Click menu Tools-&gt;Options, make sure to choose “No Authentication” and check “Allow any user to debug”. Otherwise, you may be rejected to connect in the following steps.<br><img src="/img/post/RemoteDebug-03.png" alt=""></p>
+</li>
+</ol>
+<p><strong>Debug from the Dev machine</strong></p>
+<ol>
+<li><p>Sync your local codes to the revision align with the product which is installed.</p>
+</li>
+<li><p>Get PDB files generated during the product was built. Usually, your CI tool will have it persisted somewhere. DO NOT build the source code to get the PDB files yourself! It won’t match with binary files on the remote machine.</p>
+</li>
+<li><p>Copy the PDB files to your local folder. Add it to symbol location in Visual Studio so that it knows where to load the PDB files during the debug.</p>
+</li>
+<li><p>Click Debug-&gt;Attached to Process. Choose Remote (no authentication) from the dropdown list, enter the remote server name and port, and click Refresh. All the processes in the remote machine will be displayed.<br><img src="/img/post/RemoteDebug-04.png" alt=""></p>
+</li>
+<li><p>Choose the process you’d like to debug and click Attach. (You can attached to multiple processes)</p>
+</li>
+<li><p>Double check whether symbol is loaded for the module you’d like to debug in the modules window. If it’s not, choose “Load Symbols” to load it.</p>
+</li>
+</ol>
+<p>Congratulations! Now you can start to debug.</p>
+<p>However, the release build is usually optimized, so that it’s actually quite limited for we can do. For example:</p>
+<ol>
+<li>You can’t debug line by line or go inside a function in the code.</li>
+<li>You can’t see values of the parameters or local variables.</li>
+</ol>
+<p>Basically, the best thing you can do is to setup a break point, and see whether it’s hit; if it’s hit, go check the global variable or member variable values, and then make your best guess…</p>
+<p>But still it’s better than nothing, isn’t it? Hope you enjoy :)</p>
+
+      
+    </div>
+    <footer>
+      
+        
+  
+  <div class="categories">
+    <a href="/categories/Programming/">Programming</a>
+  </div>
+
+        
+        
+  <div class="addthis addthis_toolbox addthis_default_style">
+    
+      <a class="addthis_button_facebook_like" fb:like:layout="button_count"></a>
+    
+    
+      <a class="addthis_button_tweet"></a>
+    
+    
+      <a class="addthis_button_google_plusone" g:plusone:size="medium"></a>
+    
+    
+      <a class="addthis_button_pinterest_pinit" pi:pinit:layout="horizontal"></a>
+    
+    <a class="addthis_counter addthis_pill_style"></a>
+  </div>
+  <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js"></script>
+
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+<section id="comment">
+  <h1 class="title">Comments</h1>
+
+  
+      <div id="fb-root"></div>
+<script>
+  (function(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) return;
+    js = d.createElement(s); js.id = id;
+    js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=123456789012345";
+    fjs.parentNode.insertBefore(js, fjs);
+  }(document, 'script', 'facebook-jssdk'));
+</script>
+
+<div class="fb-comments" data-href="http://cactus620.github.io/2015/03/13/VS%20Remote%20Debug/index.html" data-num-posts="5" data-width="840" data-colorscheme="light"></div>
+      
+  
+</section>
+
+</div></div>
+    <aside id="sidebar" class="alignright">
+  <div class="search">
+  <form action="//google.com/search" method="get" accept-charset="utf-8">
+    <input type="search" name="q" results="0" placeholder="Search">
+    <input type="hidden" name="as_sitesearch" value="cactus620.github.io">
+  </form>
+</div>
+
+
+  
+<div class="widget tag">
+  <h3 class="title">Categories</h3>
+  <ul class="entry">
+  
+    <li><a href="/categories/GUNPLA/">GUNPLA</a><small>8</small></li>
+  
+    <li><a href="/categories/Programming/">Programming</a><small>5</small></li>
+  
+    <li><a href="/categories/Sketch/">Sketch</a><small>30</small></li>
+  
+  </ul>
+</div>
+
+
+  
+</aside>
+    <div class="clearfix"></div>
+  </div>
+  <footer id="footer" class="inner"><div class="alignleft">
+  
+  &copy; 2020 Mandy Liu
+  
+</div>
+<div class="clearfix"></div></footer>
+  
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+</body>
+</html>
