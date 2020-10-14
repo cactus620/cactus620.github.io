@@ -26,6 +26,7 @@ img.thumb {
   height: 80px;
   padding: 5px;
   border: 1px solid #000;
+  display: inline;
 }
 html {
   line-height: 1.15; /* 1 */
@@ -2584,7 +2585,7 @@ ul.breadcrumb li + li:last-child {
 }
 .links-of-author a::before,
 .links-of-author span.exturl::before {
-  background: #2e4ee9;
+  background: #65ec8c;
   display: inline-block;
   margin-right: 3px;
   transform: translateY(-2px);
